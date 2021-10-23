@@ -53,8 +53,8 @@ class CellsSemSegModel(pl.LightningModule):
         self.loss = smp.losses.DiceLoss(mode='binary', from_logits=True)
         self.model = smp.Unet(backbone, in_channels=in_channels, classes=classes)
 
-        self.iou_func = smp.utils.metrics.IoU()
-        self.f1_func = smp.utils.metrics.Fscore()
+        self.iou_func = smp.utils.metrics.IoU(activation='sigmoid')
+        self.f1_func = smp.utils.metrics.Fscore(activation='sigmoid')
 
     def training_step(
         self, batch: Dict[str, torch.Tensor], batch_id: int
@@ -62,7 +62,7 @@ class CellsSemSegModel(pl.LightningModule):
         image = batch['image']
         mask = batch['mask']
 
-        prediction = self.model(image)
+        prediction = self.model(image).squeeze(1)
         loss_value = self.loss(y_pred=prediction, y_true=mask)
 
         self.log(
@@ -82,7 +82,7 @@ class CellsSemSegModel(pl.LightningModule):
         image = batch['image']
         mask = batch['mask']
 
-        prediction = self.model(image)
+        prediction = self.model(image).squeeze(1)
         loss_value = self.loss(y_pred=prediction, y_true=mask)
 
         self.log(
