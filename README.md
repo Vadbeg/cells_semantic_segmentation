@@ -1,2 +1,2 @@
-# cells_semantic_segmentation
+# Cells Semantic Segmentation
 Project for cells semantic segmentation

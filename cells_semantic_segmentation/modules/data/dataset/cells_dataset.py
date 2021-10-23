@@ -8,7 +8,7 @@ import pandas as pd
 from cv2 import cv2
 from torch.utils.data import Dataset
 
-from cells_semantic_segmentation.modules.data.utils import rle_decode
+from cells_semantic_segmentation.modules.data.helpers import rle_decode
 
 
 class CellDataset(Dataset):
