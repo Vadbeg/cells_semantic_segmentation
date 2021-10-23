@@ -53,6 +53,9 @@ class CellsSemSegModel(pl.LightningModule):
         self.loss = smp.losses.DiceLoss(mode='binary', from_logits=True)
         self.model = smp.Unet(backbone, in_channels=in_channels, classes=classes)
 
+        self.iou_func = smp.utils.metrics.IoU()
+        self.f1_func = smp.utils.metrics.Fscore()
+
     def training_step(
         self, batch: Dict[str, torch.Tensor], batch_id: int
     ) -> torch.Tensor:  # pylint: disable=W0613
@@ -69,6 +72,7 @@ class CellsSemSegModel(pl.LightningModule):
             logger=True,
             on_epoch=True,
         )
+        self._log_metrics(preds=prediction, target=mask, prefix='train')
 
         return loss_value
 
@@ -84,6 +88,7 @@ class CellsSemSegModel(pl.LightningModule):
         self.log(
             name='val_loss', value=loss_value, prog_bar=True, logger=True, on_epoch=True
         )
+        self._log_metrics(preds=prediction, target=mask, prefix='val')
 
         return loss_value
 
@@ -136,6 +141,28 @@ class CellsSemSegModel(pl.LightningModule):
         }
 
         return configuration
+
+    def _log_metrics(
+        self, preds: torch.Tensor, target: torch.Tensor, prefix: str
+    ) -> None:
+        iou_value = self.iou_func(preds, target)
+        f1_value = self.f1_func(preds, target)
+
+        self.log(
+            name=f'{prefix}_iou',
+            value=iou_value,
+            prog_bar=True,
+            logger=True,
+            on_epoch=True,
+        )
+
+        self.log(
+            name=f'{prefix}_f1',
+            value=f1_value,
+            prog_bar=True,
+            logger=True,
+            on_epoch=True,
+        )
 
     @staticmethod
     def _load_train_val_dataframes(

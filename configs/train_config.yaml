@@ -86,6 +86,6 @@ model:
   backbone: resnet18
   in_channels: 3
   classes: 1
-  train_batch_size: 4
-  val_batch_size: 4
+  train_batch_size: 16
+  val_batch_size: 16
   learning_rate: 0.0001
