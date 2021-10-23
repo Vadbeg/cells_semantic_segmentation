@@ -2,8 +2,10 @@
 
 from typing import Optional, Tuple
 
+import albumentations as albu
 import numpy as np
 import pandas as pd
+from albumentations.pytorch.transforms import ToTensorV2
 from torch.utils.data import DataLoader, Dataset
 
 
@@ -44,3 +46,25 @@ def get_train_val_dataframes(
     val_dataframe = dataframe.loc[dataframe['id'].isin(val_image_id)]
 
     return train_dataframe, val_dataframe
+
+
+def get_train_transforms() -> albu.Compose:
+    transforms = albu.Compose(
+        transforms=[
+            albu.Normalize(always_apply=True),
+            ToTensorV2(always_apply=True),
+        ]
+    )
+
+    return transforms
+
+
+def get_val_transforms() -> albu.Compose:
+    transforms = albu.Compose(
+        transforms=[
+            albu.Normalize(always_apply=True),
+            ToTensorV2(always_apply=True),
+        ]
+    )
+
+    return transforms

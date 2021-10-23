@@ -38,7 +38,7 @@ class CellDataset(Dataset):
         item = {'image': image, 'mask': mask}
 
         if self.transforms:
-            item = self.transforms(item)
+            item = self.transforms(**item)
 
         return item
 
