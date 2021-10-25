@@ -2,7 +2,7 @@
 
 import typer
 
-from cells_semantic_segmentation.cli.perform_segmentation import start_segmentation
+from cells_semantic_segmentation.cli.perform_seg import start_segmentation
 
 if __name__ == '__main__':
     typer.run(start_segmentation)

@@ -2,7 +2,7 @@
 
 from collections import OrderedDict
 from pathlib import Path
-from typing import Dict, Tuple
+from typing import Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np
